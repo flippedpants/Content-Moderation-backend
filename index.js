@@ -1,14 +1,16 @@
+require("dotenv").config();
 const express = require("express");
-const app = express();
+const connectDB = require("./config/db.js")
 
-PORT = 3000;
+const app = express();
+connectDB();
+
+PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 
-const moderateRoute = require("./routes/moderate.js")
-
-app.use("/api/moderate" , moderateRoute);
+app.use("/auth", require("./routes/route.js"));
 
 app.listen(PORT , () => {
-    console.log("Listening on port 3000")
+    console.log(`Listening on port ${PORT}`)
 })
