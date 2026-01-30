@@ -1,35 +1,14 @@
-const express = require("express")
-
+const express = require("express");
 const app = express();
+
+PORT = 3000;
 
 app.use(express.json());
 
-app.get('/' , (req,res) => {
-    console.log('WOW')
-    res.send("Running")
-})
+const moderateRoute = require("./routes/moderate.js")
 
-app.post("/api/moderate", (req,res) => {
-    const {text} = req.body;
+app.use("/api/moderate" , moderateRoute);
 
-    if(!text){
-        return res.status(400).json({error : "Text is required"})
-    }
-
-    let label = "safe";
-
-    if(text.toLowerCase().includes("stupid")){
-        label = "toxic";
-    }
-
-    res.json({
-        text,
-        label,
-        confidence: 0.8
-    })
-})
-
-const PORT = 3000
-app.listen(PORT, () => {
-    console.log(`Server running on port - ${PORT}`)
+app.listen(PORT , () => {
+    console.log("Listening on port 3000")
 })

@@ -1,19 +1,19 @@
 const express = require("express");
-const router = express.router();
+const router = express.Router();
 
-router.post('/' , (req,res) => {
-    const {text} = req.body;
+router.post("/", (req,res) => {
+    const { text } = req.body;
+    let label = "safe";
 
     if(!text){
-        return res.status(json).json({ error : "Text is required!"})
+        return res.status(400).json({ error: "Text is required! "})
     }
 
-    let label = "safe";
-    if(label.toLowerCase().includes("stupid")){
-        label = "toxic";
-    }
+    if (text.toLowerCase().includes("stupid")) {
+    label = "toxic";
+  }
 
-    res.json({ text, label , confidence_score: 0.85});
+  res.json({ text, label, confidence: 0.85 });
 })
 
 module.exports = router;
