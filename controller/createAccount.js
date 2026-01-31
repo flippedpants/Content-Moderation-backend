@@ -8,6 +8,7 @@ const createAcc = async(req,res) => {
         const { v4: uuidv4 } = await import("uuid");
         const appId = uuidv4();
         const rawKey = `app_key_${crypto.randomBytes(24).toString('hex')}`;
+        console.log(`rawkey - ${rawKey}`);
 
         const hashedKey = crypto.createHash('sha256').update(rawKey).digest('hex');
 
