@@ -1,6 +1,4 @@
-const User = require("..model/user.js");
-const {hashPassword, comparePassword} = require("../services/hashService.js");
-const {genearteToken, verifyToken} = require("../services/jwtService.js");
+
 
 const register = async(req,res) => {
     const {email, password} = req.body;
@@ -12,5 +10,5 @@ const register = async(req,res) => {
 
     const hashedPassword = await hashPassword(password);
 
-    
+
 }

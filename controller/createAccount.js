@@ -1,15 +1,25 @@
 const crypto = require("crypto");
 const Application = require("../models/application.js");
+const User = require("..model/user.js");
+const {hashPassword, comparePassword} = require("../services/hashService.js");
+const {genearteToken, verifyToken} = require("../services/jwtService.js");
+const createAcc = require("./createAccount.js")
 
 const createAcc = async(req,res) => {
     try{
-        const { name, plan } = req.body;
+        const { email,password,name, plan } = req.body;
+
+        const userExists = await user.findOne({email})
+        if(userExists){
+            return res.status(400).json({message: "User already exists!"})
+        }
 
         const { v4: uuidv4 } = await import("uuid");
         const appId = uuidv4();
         const rawKey = `app_key_${crypto.randomBytes(24).toString('hex')}`;
 
         const hashedKey = crypto.createHash('sha256').update(rawKey).digest('hex');
+        const hashedPassword = await hashPassword(password)
 
         const newApp = new Application({
             appId : appId,
@@ -19,6 +29,13 @@ const createAcc = async(req,res) => {
             isActive: true
         })
 
+        const newUser = new User({
+            email : email,
+            password: hashedPassword,
+            appId: appId
+        })
+
+        await newUser.save();
         await newApp.save();
 
         res.status(201).json({ message: "App sccesfully added",
