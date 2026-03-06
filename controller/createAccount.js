@@ -1,15 +1,13 @@
 const crypto = require("crypto");
 const Application = require("../models/application.js");
-const User = require("..model/user.js");
-const {hashPassword, comparePassword} = require("../services/hashService.js");
-const {genearteToken, verifyToken} = require("../services/jwtService.js");
-const createAcc = require("./createAccount.js")
+const User = require("../model/user.js");
+const {hashPassword, verifyPassword} = require("../services/hashService.js");
 
 const createAcc = async(req,res) => {
     try{
         const { email,password,name, plan } = req.body;
 
-        const userExists = await user.findOne({email})
+        const userExists = await User.findOne({email})
         if(userExists){
             return res.status(400).json({message: "User already exists!"})
         }
@@ -25,7 +23,7 @@ const createAcc = async(req,res) => {
             appId : appId,
             name: name,
             apiKeyHash: hashedKey,
-            plan: plan || "true",
+            plan: plan || "free",
             isActive: true
         })
 
@@ -38,7 +36,7 @@ const createAcc = async(req,res) => {
         await newUser.save();
         await newApp.save();
 
-        res.status(201).json({ message: "App sccesfully added",
+        res.status(201).json({ message: "App sccessfully added",
             appId: appId,
             appKey: rawKey,
             note: "Copy this key and save it, we won't show it again due to security reasons"

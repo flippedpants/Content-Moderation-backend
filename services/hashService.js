@@ -1,8 +1,7 @@
 const bcrypt = require("bcryptjs");
-const { verify } = require("jsonwebtoken");
 
 const hashPassword = async(plainPassword) => {
-    return await bcrypt.hash(plainPassword, process.env.SALT_ROUNDS);
+    return await bcrypt.hash(plainPassword, parseInt(process.env.SALT_ROUNDS));
 }
 
 const verifyPassword = async(plainPassword, hashedPassword) => {
