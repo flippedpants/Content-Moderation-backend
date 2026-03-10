@@ -25,4 +25,4 @@ const verifyApi = async(req,res,next) => {
     }
 }
 
-module.exports = verifyApp;
+module.exports = verifyApi;

@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 
 const hashPassword = async(plainPassword) => {
     return await bcrypt.hash(plainPassword, parseInt(process.env.SALT_ROUNDS));
