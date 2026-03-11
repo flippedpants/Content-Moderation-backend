@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const Application = require("../models/application.js");
 const User = require("../models/user.js");
-const {hashPassword, verifyPassword} = require("../services/hashService.js");
+const {hashPassword } = require("../services/hashService.js");
 
 const createAcc = async(req,res) => {
     try{

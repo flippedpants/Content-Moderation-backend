@@ -1,9 +1,15 @@
-const {hashPassword, verifyPassword} = require("../services/hashService")
+const {verifyPassword} = require("../services/hashService")
 const User = require("../models/user.js")
 const {generateToken} = require("../services/jwtService.js");
-const { verify } = require("jsonwebtoken");
+const {validationResult} = require("express-validator")
 
 const login = async(req,res) => {
+    const result = validationResult(req)
+
+    if(!result.isEmpty()){
+        return res.status(400).json({errors : result.array()})
+    }
+
     try{
         const {email, password} = req.body;
 

@@ -1,9 +1,16 @@
 const axios = require("axios");
 const ModerationLog = require("../models/moderationLog.js");
+const {validationResult} = require("express-validator")
 
-const MODERATION_SERVICE_URL = process.env.MODERATION_SERVICE_URL || "http://localhost:8000";
+const MODERATION_SERVICE_URL = process.env.MODERATION_SERVICE_URL;
 
 const moderate = async (req, res) => {
+  const result = validationResult(req)
+
+  if(!result.isEmpty()){
+    return res.status(400).json({errors:result.array()})
+  }
+
   const { text } = req.body;
   const { appId } = req.appContext;
 
@@ -12,18 +19,15 @@ const moderate = async (req, res) => {
   }
 
   try {
-    // Call the FastAPI moderation microservice
     const response = await axios.post(`${MODERATION_SERVICE_URL}/moderate`, {
       text: text,
     });
 
-    const { flagged, labels, scores, label, confidence } = response.data;
+    const { flagged, labels, scores, confidence } = response.data;
 
-    // Save moderation log to database
     const newModerationLog = new ModerationLog({
       appId: appId,
       text: text,
-      label: label,
       labels: labels,
       scores: scores,
       confidence: confidence,
@@ -35,7 +39,6 @@ const moderate = async (req, res) => {
     res.json({
       text,
       flagged,
-      label,
       labels,
       scores,
       confidence,
@@ -51,7 +54,7 @@ const moderate = async (req, res) => {
     }
 
     return res.status(503).json({
-      error: "Moderation service is unavailable. Please try again later.",
+      error: "Moderation service is unavailable.",
     });
   }
 };
