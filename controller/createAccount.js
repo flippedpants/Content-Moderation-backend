@@ -2,8 +2,15 @@ const crypto = require("crypto");
 const Application = require("../models/application.js");
 const User = require("../models/user.js");
 const {hashPassword } = require("../services/hashService.js");
+const {validationResult} = require("express-validator")
 
 const createAcc = async(req,res) => {
+    const result = validationResult(req)
+
+    if(!result.isEmpty()){
+        return res.status(400).json({errors : result.array()})
+    }
+
     try{
         const { email,password,name, plan } = req.body;
 
