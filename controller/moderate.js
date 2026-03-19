@@ -14,10 +14,6 @@ const moderate = async (req, res) => {
   const { text } = req.body;
   const { appId } = req.appContext;
 
-  if (!text) {
-    return res.status(400).json({ error: "Text is required!" });
-  }
-
   try {
     const response = await axios.post(`${MODERATION_SERVICE_URL}/moderate`, {
       text: text,
