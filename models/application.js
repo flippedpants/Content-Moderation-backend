@@ -5,7 +5,8 @@ const appSchema = new mongoose.Schema({
     name: {type: String, required:true},
     apiKeyHash: {type: String, required: true},
     plan: {type: String,  default:"free"},
-    isActive: {type: Boolean, default: true}
+    isActive: {type: Boolean, default: true},
+    createdAt: {type: Date, default: Date.now}
 })
 
 module.exports = mongoose.model("Application", appSchema);

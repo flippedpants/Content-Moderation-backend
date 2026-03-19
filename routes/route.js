@@ -12,7 +12,7 @@ const login = require("../controller/login.js")
 router.post("/register", registerValidaton, createAccount);
 router.post("/login", loginValidation , login)
 router.post("/moderate", verifyApi, apiLimiter , [
-    body("text").isEmpty().isLength({ max:300})
+    body("text").notEmpty().isLength({ max:300})
 ] , moderate);
 
 module.exports = router;

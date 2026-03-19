@@ -1,13 +1,13 @@
 const {body} = require("express-validator");
 
-const emailValidationChain = () => body("email").trim().isEmpty().isEmail().normalizeEmail()
-const passwordValidationChain = () => body("password").trim().isEmpty().isLength({min: 5})
+const emailValidationChain = () => body("email").trim().notEmpty().isEmail().normalizeEmail()
+const passwordValidationChain = () => body("password").trim().notEmpty().isLength({min: 5})
 
 const registerValidaton = [
     emailValidationChain(),
     passwordValidationChain(),
-    body("name").trim().isEmpty(),
-    body("plan").isEmpty,
+    body("name").trim().notEmpty(),
+    body("plan").optional(),
 ]
 
 const loginValidation = [

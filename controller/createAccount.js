@@ -43,7 +43,7 @@ const createAcc = async(req,res) => {
         await newUser.save();
         await newApp.save();
 
-        res.status(201).json({ message: "App sccessfully added",
+        res.status(201).json({ message: "App successfully added",
             appId: appId,
             appKey: rawKey,
             note: "Copy this key and save it, we won't show it again due to security reasons"
