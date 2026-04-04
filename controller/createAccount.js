@@ -1,5 +1,5 @@
-const crypto = require("crypto");
-const Application = require("../models/application.js");
+const { generateApiKey } = require("../services/keyService.js");
+const ApiKey = require("../models/apiKey.js");
 const User = require("../models/user.js");
 const {hashPassword } = require("../services/hashService.js");
 const {validationResult} = require("express-validator")
@@ -21,18 +21,16 @@ const createAcc = async(req,res) => {
 
         const { v4: uuidv4 } = await import("uuid");
         const appId = uuidv4();
-        const rawKey = `app_key_${crypto.randomBytes(24).toString('hex')}`;
+        const { rawKey, prefix, hashedKey } = generateApiKey();
+        const hashedPassword = await hashPassword(password);
 
-        const hashedKey = crypto.createHash('sha256').update(rawKey).digest('hex');
-        const hashedPassword = await hashPassword(password)
-
-        const newApp = new Application({
+        const newKey = new ApiKey({
             appId : appId,
-            name: name,
+            name: name || "Default Key",
             apiKeyHash: hashedKey,
-            plan: plan || "free",
+            prefix: prefix,
             isActive: true
-        })
+        });
 
         const newUser = new User({
             email : email,
@@ -41,9 +39,9 @@ const createAcc = async(req,res) => {
         })
 
         await newUser.save();
-        await newApp.save();
+        await newKey.save();
 
-        res.status(201).json({ message: "App successfully added",
+        res.status(201).json({ message: "Account successfully created",
             appId: appId,
             appKey: rawKey,
             note: "Copy this key and save it, we won't show it again due to security reasons"

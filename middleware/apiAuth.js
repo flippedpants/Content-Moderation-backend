@@ -1,5 +1,5 @@
-const crypto = require("crypto");
-const Application = require("../models/application.js");
+const { hashApiKey } = require("../services/keyService.js");
+const ApiKey = require("../models/apiKey.js");
 
 const verifyApi = async(req,res,next) => {
     try{
@@ -9,13 +9,17 @@ const verifyApi = async(req,res,next) => {
             return res.status(401).json({ message: "API key is required!"});
         }
 
-        const hashedClientKey = crypto.createHash('sha256').update(clientKey).digest('hex');
+        const hashedClientKey = hashApiKey(clientKey);
 
-        const app = await Application.findOne({ apiKeyHash: hashedClientKey, isActive: true});
+        const app = await ApiKey.findOne({ apiKeyHash: hashedClientKey, isActive: true});
 
         if(!app){
             return res.status(401).json({ message: "Invalid API key!"})
         }
+
+        // update last used time
+        app.lastUsed = new Date();
+        await app.save();
 
         req.appContext = app;
         next();
