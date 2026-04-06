@@ -5,7 +5,7 @@ const getKeys = async (req, res) => {
     try {
         const keys = await ApiKey.find({ appId: req.user.appId }).sort({ createdAt: -1 });
         res.json(keys.map(k => ({
-            id: k._id,
+            id: String(k._id),
             name: k.name,
             prefix: k.prefix,
             createdAt: k.createdAt,
@@ -35,8 +35,9 @@ const createNewKey = async (req, res) => {
         await newKey.save();
 
         res.status(201).json({
-            id: newKey._id,
+            id: String(newKey._id),
             name: newKey.name,
+            rawKey,
             key: rawKey,
             prefix: newKey.prefix,
             createdAt: newKey.createdAt,

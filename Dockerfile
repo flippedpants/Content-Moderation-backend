@@ -1,0 +1,15 @@
+FROM node
+
+WORKDIR /app
+
+COPY package*.json .
+
+#USED FOR RUNNING COMMANDS WHILE BUILDING THE IMAGE
+RUN npm i
+
+COPY . .
+
+EXPOSE 8080
+
+#TO RUN THE CONTAINER
+CMD ["npm", "start"]
